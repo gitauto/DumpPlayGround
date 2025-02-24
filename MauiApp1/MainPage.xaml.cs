@@ -1,7 +1,7 @@
 ﻿using DumpLibrary;
 using MauiApp1.Helpers;
+using MauiApp1.Test;
 using System.Globalization;
-using System.Net.Http;
 
 namespace MauiApp1;
 
@@ -27,6 +27,11 @@ public partial class MainPage : ContentPage
     {
         var script = $@"appendRawHTML(`{html}`)";
         await webView.EvaluateJavaScriptAsync(script);
+    }
+
+    private void OnDumpTest_Clicked(object sender, EventArgs e)
+    {
+        DumpTestStuff.DumpTest();
     }
 }
 
