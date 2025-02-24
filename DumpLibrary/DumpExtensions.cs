@@ -313,14 +313,14 @@ public static class DumpExtensions
         }
         else if (value is IEnumerable enumerable)
         {
-            if (maxDepth > 0) { return EnumerableToHtmlTable(enumerable, maxDepth - 1, visitedObjects); }
+            if (maxDepth > 0) { return EnumerableToHtmlTable(enumerable, maxDepth, visitedObjects); }
                 
             return WebUtility.HtmlEncode(value.ToString());
         }
         else
         {
             // Oggetto complesso: usa la ricorsione se maxDepth non è esaurito
-            if (maxDepth > 0) { return ObjectToHtmlTable(value, maxDepth - 1, visitedObjects); }
+            if (maxDepth > 0) { return ObjectToHtmlTable(value, maxDepth, visitedObjects); }
                 
             return WebUtility.HtmlEncode(value.ToString());
         }
@@ -370,7 +370,6 @@ public static class DumpExtensions
         public int GetHashCode(object obj) => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
     }
 
-    // TODO: Darkmode
     public static string GetHtmlPageTemplate(string title = "", string lang = "en", bool darkMode = false)
     {
         return HtmlPageTemplate.Replace("%lang%" ,lang)
