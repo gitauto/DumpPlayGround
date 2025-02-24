@@ -81,7 +81,11 @@ public partial class MainWindow : Window
         var b = new Button() { Height = 50, Width = 100, Content = "Click Me" };
         b.Click += (s, e) => MessageBox.Show("Hello World!", "Info");
         f.Content = b;
-        f.Dump();
+        //f.Dump();
+
+        f.Show();
+
+        f.GetType().Dump();
     }
 
     private void ClearPageLightMode_Click(object sender, RoutedEventArgs e)
