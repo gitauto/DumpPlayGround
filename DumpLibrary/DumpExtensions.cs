@@ -220,15 +220,17 @@ public static class DumpExtensions
         // Controlla se l'oggetto è già stato visitato
         if (visitedObjects.Contains(obj))
         {
-            string cyclic = $@"
-				<table id=""{tableId}"" class=""limit"" title=""Cyclic reference"">
-					<thead>
-						<tr><td class=""typeheader"" colspan=""2""><span class=""cyclic"">∞</span>{obj.GetType().Name}</td></tr>
-					</thead>
-					<tbody></tbody>
-				</table>";
+            // Cyclic Reference
+            var sbc = new StringBuilder();
 
-            return cyclic;
+            sbc.AppendLine("<table id=\"{tableId}\" class=\"limit\" title=\"Cyclic reference\">");
+            sbc.AppendLine("<thead>");
+            sbc.AppendLine("<tr><td class=\"typeheader\" colspan=\"2\"><span class=\"cyclic\">∞</span>{obj.GetType().Name}</td></tr>");
+            sbc.AppendLine("</thead>");
+            sbc.AppendLine("<tbody></tbody>");
+            sbc.AppendLine("</table>");
+
+            return sbc.ToString();
         }
 
         // Aggiungi l'oggetto all'insieme dei visitati
@@ -239,7 +241,7 @@ public static class DumpExtensions
         Type type = obj.GetType();
         var members = GetPublicMembers(type);
 
-        StringBuilder sb = new();
+        var sb = new StringBuilder();
 
         sb.AppendLine($@"<div class=""spacer"">");
         sb.AppendLine($@"<table id=""{tableId}"">");
