@@ -8,15 +8,14 @@ namespace WinFormsApp1;
 
 public partial class Form1 : Form
 {
-    private readonly SynchronizationContext? _syncContext;
+    private const string _HTMLPageTitle = "Dump Playground";
     private readonly string _isoCode = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
     public Form1()
     {
         InitializeComponent();
 
-        this.Text = $"Winforms - Dump Playground ver. {Utils.GetAppVersion()}";
-        _syncContext = SynchronizationContext.Current;
+        this.Text = $"Winforms - {_HTMLPageTitle} ver. {Utils.GetAppVersion()}";
         DumpExtensions.AppendRawHTML = AppendRawHTML;
 
         InitializeWebView();
@@ -46,7 +45,7 @@ public partial class Form1 : Form
 
     private void ClearPageToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        webView21.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, Utils.IsDarkModeActive()));
+        webView21.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate(_HTMLPageTitle, _isoCode, Utils.IsDarkModeActive()));
     }
 
     private async void ExportHTMLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,7 +69,7 @@ public partial class Form1 : Form
 
     private void ClearPageLightModeToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        webView21?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, true));
+        webView21?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate(_HTMLPageTitle, _isoCode, true));
     }
 
     private void DumpAWindowsFormToolStripMenuItem_Click(object sender, EventArgs e)
