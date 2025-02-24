@@ -200,7 +200,18 @@ public static class DumpExtensions
             sb.AppendLine("<tr>");
             foreach (var member in members)
             {
-                object? value = member is FieldInfo info ? info.GetValue(item) : ((PropertyInfo)member).GetValue(item, null);
+                Debug.WriteLine($"Tipo: {member.MemberType}, Nome: {member.Name}");
+
+                object? value;
+                try
+                {
+                    value = member is FieldInfo info ? info.GetValue(item) : ((PropertyInfo)member).GetValue(item, null);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    continue;
+                }
                 sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
             }
             sb.AppendLine("</tr>");
@@ -283,7 +294,19 @@ public static class DumpExtensions
         // Scorre tutti i membri dell'oggetto e per ognuno genera una riga della tabella con nome e valore
         foreach (var member in members)
         {
-            object? value = member is FieldInfo info ? info.GetValue(obj) : ((PropertyInfo)member).GetValue(obj, null);
+            Debug.WriteLine($"Tipo: {member.MemberType}, Nome: {member.Name}");
+
+            object? value;
+            try
+            {
+                value = member is FieldInfo info ? info.GetValue(obj) : ((PropertyInfo)member).GetValue(obj, null);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                continue;
+            }
+
             var memberType = value?.GetType();
 
             sb.AppendLine("<tr>");
