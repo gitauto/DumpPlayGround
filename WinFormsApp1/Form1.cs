@@ -1,5 +1,4 @@
 using DumpLibrary;
-using Microsoft.Web.WebView2.WinForms;
 using System.Globalization;
 using WinFormsApp1.Extensions;
 using WinFormsApp1.Helpers;
@@ -9,7 +8,6 @@ namespace WinFormsApp1;
 
 public partial class Form1 : Form
 {
-    public WebView2? _webView;
     private readonly SynchronizationContext? _syncContext;
     private readonly string _isoCode = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
@@ -26,23 +24,19 @@ public partial class Form1 : Form
 
     private async void InitializeWebView()
     {
-        _webView = new WebView2 { Dock = DockStyle.Fill };
-        Controls.Add(_webView);
+        await webView21.EnsureCoreWebView2Async(null);
 
-        await _webView.EnsureCoreWebView2Async(null);
-        _webView.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate());
+        // Imposta manualmente la posizione e le dimensioni del WebView2
+        webView21.Location = new System.Drawing.Point(0, menuStrip1.Height);
+        webView21.Size = new System.Drawing.Size(this.ClientSize.Width, this.ClientSize.Height - menuStrip1.Height);
+
+        webView21.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate());
     }
 
-    public void AppendRawHTML(string html)
+    public async void AppendRawHTML(string html)
     {
         var script = $@"appendRawHTML(`{html}`)";
-
-        _syncContext?.Post(async _ =>
-        {
-            if (_webView?.CoreWebView2 is null) { return; }
-            await _webView.CoreWebView2.ExecuteScriptAsync(script);
-
-        }, null);
+        await webView21.CoreWebView2.ExecuteScriptAsync(script);
     }
 
     private void TestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -52,16 +46,16 @@ public partial class Form1 : Form
 
     private void ClearPageToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        _webView?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, Utils.IsDarkModeActive()));
+        webView21.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, Utils.IsDarkModeActive()));
     }
 
-    private void ExportHTMLToolStripMenuItem_Click(object sender, EventArgs e)
+    private async void ExportHTMLToolStripMenuItem_Click(object sender, EventArgs e)
     {
         try
         {
             if (saveFileDialog1.ShowDialog() != DialogResult.OK) { return; }
 
-            _webView?.SaveHTMLSourceToFileAsync(saveFileDialog1.FileName);
+            await webView21.SaveHTMLSourceToFileAsync(saveFileDialog1.FileName);
         }
         catch (Exception ex)
         {
@@ -76,7 +70,7 @@ public partial class Form1 : Form
 
     private void ClearPageLightModeToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        _webView?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, true));
+        webView21?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, true));
     }
 
     private void DumpAWindowsFormToolStripMenuItem_Click(object sender, EventArgs e)
