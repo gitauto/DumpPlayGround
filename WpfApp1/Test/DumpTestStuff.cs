@@ -1,6 +1,6 @@
 ﻿using DumpLibrary;
 using System.Data;
-using WinFormsApp1.Models;
+using WpfApp1.Models;
 
 namespace WpfApp1.Test;
 

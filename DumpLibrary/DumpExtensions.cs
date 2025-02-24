@@ -16,23 +16,6 @@ public static class DumpExtensions
 
     public static T Dump<T>(this T obj, string? title = null, int maxDepth = 5)
     {
-        //-------------------------------------------------------------------------------------------
-        // Handle special object not to be transformed in HTML, like the LINQPad tool does for Forms
-        //-------------------------------------------------------------------------------------------
-        if (obj != null)
-        {
-            Type objType = obj.GetType();
-
-            // Verifica se l'oggetto deriva da System.Windows.Forms.Form
-            //if (typeof(Form).IsAssignableFrom(objType))
-            if (objType.FullName is not null && objType.FullName.Equals("System.Windows.Forms.Form"))
-            {
-                MethodInfo? showMethod = objType.GetMethod("Show", []);
-                showMethod?.Invoke(obj, null);
-                //return obj;
-            }
-        }
-
         //---------------------------
         // Convert the Objet to HTML
         //---------------------------

@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp1.Models;
+﻿namespace WpfApp1.Models;
 
 public record class Person
 {

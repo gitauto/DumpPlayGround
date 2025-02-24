@@ -1,9 +1,12 @@
 ﻿using DumpLibrary;
+using Microsoft.Win32;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using WpfApp1.Helpers;
 using WpfApp1.Test;
+using WpfApp1.Extensions;
 
 namespace WpfApp1;
 
@@ -29,13 +32,26 @@ public partial class MainWindow : Window
         webView.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, Utils.IsDarkModeActive()));
     }
 
-    private void ExportHTML_Click(object sender, RoutedEventArgs e)
+    private async void ExportHTML_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            //if (saveFileDialog1.ShowDialog() != DialogResult.OK) { return; }
+            // Crea un'istanza di SaveFileDialog
+            var saveFileDialog = new SaveFileDialog
+            {
+                // Configura le proprietà del dialogo
+                Title = "Save the file",
+                Filter = "HTML(*.html)|*.html|All files (*.*)|*.*",                                  // Filtri per i tipi di file
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Cartella iniziale
+                FileName = ""                                                                        // Nome file predefinito
+            };
 
-            //await webView21.SaveHTMLSourceToFileAsync(saveFileDialog1.FileName);
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Debug.WriteLine($"{webView.GetType()}");
+
+                await webView.SaveHTMLSourceToFileAsync(saveFileDialog.FileName);
+            }
         }
         catch (Exception ex)
         {
@@ -65,7 +81,7 @@ public partial class MainWindow : Window
         var b = new Button() { Height = 50, Width = 100, Content = "Click Me" };
         b.Click += (s, e) => MessageBox.Show("Hello World!", "Info");
         f.Content = b;
-        f.Show();
+        f.Dump();
     }
 
     private void ClearPageLightMode_Click(object sender, RoutedEventArgs e)

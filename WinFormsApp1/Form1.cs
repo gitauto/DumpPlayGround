@@ -52,6 +52,12 @@ public partial class Form1 : Form
     {
         try
         {
+            // Configura le proprietà del dialogo
+            saveFileDialog1.Title = "Save the file";
+            saveFileDialog1.Filter = "HTML(*.html)|*.html|All files (*.*)|*.*";                                  // Filtri per i tipi di file
+            saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Cartella iniziale
+            saveFileDialog1.FileName = "";                                                                       // Nome file predefinito
+
             if (saveFileDialog1.ShowDialog() != DialogResult.OK) { return; }
 
             await webView21.SaveHTMLSourceToFileAsync(saveFileDialog1.FileName);
