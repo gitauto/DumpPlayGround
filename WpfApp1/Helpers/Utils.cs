@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.Reflection;
 
-namespace WinFormsApp1.Helpers;
+namespace WpfApp1.Helpers;
 
 public static class Utils
 {
