@@ -11,9 +11,11 @@ internal class DumpTestStuff
         string? buffer = null;
         buffer.Dump("null string");
 
-        TimeZoneInfo.Local.Dump();
+        new System.Guid().Dump();
 
         (-10.76).Dump("Number");
+
+        TimeZoneInfo.Local.Dump();
 
         var alice = new Person2 { Name = "Alice" };
         var bob = new Person2 { Name = "Bob" };
