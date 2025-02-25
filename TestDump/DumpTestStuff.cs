@@ -7,16 +7,16 @@ public class DumpTestStuff
 {
     public static void DumpTest()
     {
-        string? buffer = null;
-        buffer.Dump("null string");
+        //string? buffer = null;
+        //buffer.Dump("null string");
 
-        new Guid().Dump("Guid");
+        //new Guid().Dump("Guid");
 
-        (-10.76).Dump("Number");
+        //(-10.76).Dump("Number");
 
-        new { Name = "Avatar", Description = "This is a film" }.Dump("Anonymous types");
+        //new { Name = "Avatar", Description = "This is a film" }.Dump("Anonymous types");
 
-        TimeZoneInfo.Local.Dump();
+        //TimeZoneInfo.Local.Dump();
 
         //var persona = new { Nome = "Mario", Età = 30, Amici = new[] { "Luigi", "Peach" } };
         //persona.Dump("Persona");
