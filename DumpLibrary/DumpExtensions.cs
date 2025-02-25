@@ -134,7 +134,7 @@ public static class DumpExtensions
         sb.AppendLine($@"<td class=""typeheader"" colspan=""1"">");
         sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
         sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>");
-        sb.AppendLine($@"{headerText} ({dataSet.Tables.Count} item{pluralSuffix})");
+        sb.AppendLine($@"{WebUtility.HtmlEncode(headerText)} ({dataSet.Tables.Count} item{pluralSuffix})");
         sb.AppendLine($@"</a></td>");
         sb.AppendLine($@"</tr></thead>");
         sb.AppendLine($@"<tbody><tr><td>");
@@ -173,13 +173,13 @@ public static class DumpExtensions
                 sb.AppendLine($@"<thead><tr>");
                 sb.AppendLine($@"<td class=""typeheader"" colspan=""{dataTable.Columns.Count}"">");
                 sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{headerText} ({dataTable.Rows.Count} item{pluralSuffix})</a>");
+                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(headerText)} ({dataTable.Rows.Count} item{pluralSuffix})</a>");
                 sb.AppendLine($@"</td></tr><tr>");
 
                 // Genera le colonne dell'intestazione
                 foreach (DataColumn column in dataTable.Columns)
                 {
-                    sb.AppendFormat("<th>{0}</th>", column.ColumnName);
+                    sb.AppendFormat("<th>{0}</th>", WebUtility.HtmlEncode(column.ColumnName));
                 }
                 sb.AppendLine("</tr></thead>");
                 headerPrinted = true;
@@ -231,13 +231,13 @@ public static class DumpExtensions
                 sb.AppendLine("<thead><tr>");
                 sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
                 sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{formattedTypeName}</a>");
+                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(formattedTypeName)}</a>");
                 sb.AppendLine($@"</td></tr>");
 
                 sb.AppendLine($@"<tr>");
                 foreach (var member in members)
                 {
-                    sb.AppendFormat("<th>{0}</th>", member.Name);
+                    sb.AppendFormat("<th>{0}</th>", WebUtility.HtmlEncode(member.Name));
                 }
                 sb.AppendLine("</tr></thead>");
 
@@ -278,18 +278,22 @@ public static class DumpExtensions
     {
         var tableId = $"t{Interlocked.Increment(ref _numElement)}";
 
+        Type type = obj.GetType();
+        string typeToShowFirstLine;
+        if (type.IsAnonymous()) { typeToShowFirstLine = "ø"; } else { typeToShowFirstLine = type.Name; }
+
         // Controlla se l'oggetto è già stato visitato
         if (visitedObjects.Contains(obj))
         {
             // Cyclic Reference
             var sbc = new StringBuilder();
 
-            sbc.AppendLine("<table id=\"{tableId}\" class=\"limit\" title=\"Cyclic reference\">");
-            sbc.AppendLine("<thead>");
-            sbc.AppendLine("<tr><td class=\"typeheader\" colspan=\"2\"><span class=\"cyclic\">∞</span>{obj.GetType().Name}</td></tr>");
-            sbc.AppendLine("</thead>");
-            sbc.AppendLine("<tbody></tbody>");
-            sbc.AppendLine("</table>");
+            sbc.AppendLine($@"<table id=""{tableId}"" class=""limit"" title=""Cyclic reference"">");
+            sbc.AppendLine($@"<thead>");
+            sbc.AppendLine($@"<tr><td class=""typeheader"" colspan=""2""><span class=""cyclic"">∞</span>{WebUtility.HtmlEncode(typeToShowFirstLine)}</td></tr>");
+            sbc.AppendLine($@"</thead>");
+            sbc.AppendLine($@"<tbody></tbody>");
+            sbc.AppendLine($@"</table>");
 
             return sbc.ToString();
         }
@@ -299,7 +303,6 @@ public static class DumpExtensions
 
         const int numColumns = 2;
 
-        Type type = obj.GetType();
         var members = GetPublicMembers(type);
 
         var sb = new StringBuilder();
@@ -312,25 +315,35 @@ public static class DumpExtensions
         sb.AppendLine("<tr>");
         sb.AppendLine($@"<td class=""typeheader"" colspan=""{numColumns}"">");
         sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-        sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{type.Name}</a>");
+        sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(typeToShowFirstLine)}</a>");
         sb.AppendLine("</td></tr>");
 
         try
         {
-            string stringData = "";
+            string secondLine = "";
             var checker = new CircularReferenceChecker();
 
-            // NOTA: Se l'oggetto ha reference circolari, il metodo .ToString() genera errore, pertanto si evita di chiamarlo
-            if (!checker.HasCircularReference(obj)) { stringData = obj.ToString() ?? ""; }
+            if (type.IsAnonymous())
+            {
+                secondLine = "";
+            }
+            else if (type.IsRecord())
+            {
+                secondLine = "";
+            }
+            else if (type.IsClass)
+            {
+                // NOTA: Se l'oggetto ha reference circolari, il metodo .ToString() genera errore, pertanto si evita di chiamarlo
+                if (!checker.HasCircularReference(obj)) { secondLine = obj.ToString() ?? ""; }
+                if (string.IsNullOrEmpty(secondLine))   { secondLine = type.FullName ?? ""; }
+            }
 
-            if (string.IsNullOrEmpty(stringData) && !type.IsRecord()) { stringData = type.FullName ?? ""; }
-
-            if (stringData.Length > 0)
+            if (secondLine.Length > 0)
             {
                 // Seconda riga della tabella
-                sb.AppendLine(@"<tr id=""sum1"">");
-                sb.AppendLine($@"<td class=""summary"" colspan=""2"">{stringData}</td>");
-                sb.AppendLine("</tr>");
+                sb.AppendLine($@"<tr id=""sum1"">");
+                sb.AppendLine($@"<td class=""summary"" colspan=""2"">{WebUtility.HtmlEncode(secondLine)}</td>");
+                sb.AppendLine($@"</tr>");
             }
         }
         catch (Exception ex)
@@ -360,7 +373,7 @@ public static class DumpExtensions
             var memberType = value?.GetType();
 
             sb.AppendLine("<tr>");
-            sb.AppendLine($@"<th =""member"" title=""{memberType?.FullName}"">{member.Name}</th>");
+            sb.AppendLine($@"<th =""member"" title=""{WebUtility.HtmlEncode(memberType?.FullName)}"">{WebUtility.HtmlEncode(member.Name)}</th>");
             sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
             sb.AppendLine("</tr>");
         }
@@ -427,14 +440,20 @@ public static class DumpExtensions
     {
         // Ottieni tutti i Fields e le Properties pubbliche dell'oggetto, ordinati per nome
         return [.. type.GetMembers(BindingFlags.Public | BindingFlags.Instance)
-                   .Where(member => member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property)
-                   .OrderBy(member => member.Name)];
+                       .Where(member => member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property)
+                       .OrderBy(member => member.Name)];
     }
 
     private static int GetEnumerableLength(IEnumerable enumerable)
     {
-        if (enumerable is Array array) { return array.Length; }
-        else if (enumerable is ICollection collection) { return collection.Count; }
+        if (enumerable is Array array) 
+        { 
+            return array.Length; 
+        }
+        else if (enumerable is ICollection collection) 
+        { 
+            return collection.Count; 
+        }
         return 0;
     }
 
@@ -451,4 +470,26 @@ public static class DumpExtensions
                                .Replace("%title%", !string.IsNullOrEmpty(title) ? "" : $"<title>{title}</title>")
                                .Replace("%css%", darkMode ? CssDarkMode : CssLightMode);
     }
+
+    public static bool IsAnonymous(this Type type)
+    {
+        if (!string.IsNullOrEmpty(type.Namespace))
+        {
+            return false;
+        }
+        if (type.Name == "<>f__AnonymousType0")
+        {
+            return true;
+        }
+        if (!type.IsGenericType)
+        {
+            return false;
+        }
+        return IsAnonymous(type.Name);
+    }
+
+    public static bool IsAnonymous(string typeName) => typeName.Length > 5 && 
+                                                       ((typeName[0] == '<' && typeName[1] == '>' && 
+                                                       ((typeName[5] == 'A' && typeName[6] == 'n') || typeName.IndexOf("anon", StringComparison.OrdinalIgnoreCase) > -1)) || 
+                                                        (typeName[0] == 'V' && typeName[1] == 'B' && typeName[2] == '$' && typeName[3] == 'A' && typeName[4] == 'n'));
 }
