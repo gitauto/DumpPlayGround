@@ -59,7 +59,6 @@ public static class DumpExtensions
 </body>
 </html>";
 
-
     // Delegato predefinito per metodi senza ritorno (void), e un parametro di tipo stringa
     public static Action<string>? AppendRawHTML { get; set; }
 
@@ -112,7 +111,7 @@ public static class DumpExtensions
         {
             return DataSetToHtmlTable(dataSet, maxDepth, visitedObjects);
         }
-        else if (obj is IEnumerable enumerable)
+        else if (obj is IEnumerable enumerable && obj is not string)
         {
             return EnumerableToHtmlTable(enumerable, maxDepth, visitedObjects);
         }
@@ -385,7 +384,7 @@ public static class DumpExtensions
         {
             return WebUtility.HtmlEncode(value.ToString());
         }
-        else if (value is IEnumerable enumerable)
+        else if (value is IEnumerable enumerable && value is not string)
         {
             if (maxDepth > 0) { return EnumerableToHtmlTable(enumerable, maxDepth, visitedObjects); }
                 

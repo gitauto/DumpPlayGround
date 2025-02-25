@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp1.Models;
+﻿namespace TestDump;
 
 public record class Person
 {

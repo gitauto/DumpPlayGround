@@ -1,8 +1,9 @@
 using DumpLibrary;
+using System.Diagnostics;
 using System.Globalization;
+using TestDump;
 using WinFormsApp1.Extensions;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Test;
 
 namespace WinFormsApp1;
 
@@ -35,6 +36,7 @@ public partial class Form1 : Form
     public async void AppendRawHTML(string html)
     {
         var script = $@"appendRawHTML(`{html}`)";
+        Debug.WriteLine("\n" + script +"\n");
         await webView21.CoreWebView2.ExecuteScriptAsync(script.Replace("\r\n", ""));
     }
 

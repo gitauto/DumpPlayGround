@@ -66,6 +66,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DumpLibrary\DumpLibrary.csproj" />
+	  <ProjectReference Include="..\TestDump\TestDump.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -5,8 +5,8 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using WpfApp1.Helpers;
-using WpfApp1.Test;
 using WpfApp1.Extensions;
+using TestDump;
 
 namespace WpfApp1;
 

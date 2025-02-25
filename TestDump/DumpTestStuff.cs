@@ -1,10 +1,9 @@
 ﻿using DumpLibrary;
 using System.Data;
-using MauiApp1.Models;
 
-namespace MauiApp1.Test;
+namespace TestDump;
 
-internal class DumpTestStuff
+public class DumpTestStuff
 {
     public static void DumpTest()
     {
@@ -16,6 +15,15 @@ internal class DumpTestStuff
         (-10.76).Dump("Number");
 
         TimeZoneInfo.Local.Dump();
+
+        var persona = new { Nome = "Mario", Età = 30, Amici = new[] { "Luigi", "Peach" } };
+        persona.Dump("Persona");
+
+        var numeri = new List<int> { 1, 2, 3, 4, 5 };
+        numeri.Dump("Numeri");
+
+        var risultato = numeri.Where(n => n > 2).Dump("Filtrati").Sum();
+        risultato.Dump("Somma");
 
         var alice = new Person2 { Name = "Alice" };
         var bob = new Person2 { Name = "Bob" };
