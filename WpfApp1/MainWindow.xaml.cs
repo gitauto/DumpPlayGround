@@ -67,7 +67,7 @@ public partial class MainWindow : Window
     public async void AppendRawHTML(string html)
     {
         var script = $@"appendRawHTML(`{html}`)";
-        await webView.CoreWebView2.ExecuteScriptAsync(script);
+        await webView.CoreWebView2.ExecuteScriptAsync(script.Replace("\r\n", ""));
     }
 
     private void RunDumpTest_Click(object sender, RoutedEventArgs e)

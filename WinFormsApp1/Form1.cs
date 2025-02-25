@@ -35,7 +35,7 @@ public partial class Form1 : Form
     public async void AppendRawHTML(string html)
     {
         var script = $@"appendRawHTML(`{html}`)";
-        await webView21.CoreWebView2.ExecuteScriptAsync(script);
+        await webView21.CoreWebView2.ExecuteScriptAsync(script.Replace("\r\n", ""));
     }
 
     private void TestToolStripMenuItem_Click(object sender, EventArgs e)

@@ -18,15 +18,13 @@ public partial class MainPage : ContentPage
         DumpExtensions.AppendRawHTML = AppendRawHTML;
 
         var htmlSource = new HtmlWebViewSource { Html = DumpExtensions.GetHtmlPageTemplate("Dump Playground", _isoCode, false) };
-
-        // Assegna la sorgente al WebView
         webView.Source = htmlSource;
     }
 
     public async void AppendRawHTML(string html)
     {
-        var script = $@"appendRawHTML(`{html}`)";
-        await webView.EvaluateJavaScriptAsync(script);
+        var script = $@"appendRawHTML(`{html}`)";        
+        await webView.EvaluateJavaScriptAsync(script.Replace("\r\n", ""));
     }
 
     private void OnDumpTest_Clicked(object sender, EventArgs e)
