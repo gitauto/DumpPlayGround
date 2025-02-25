@@ -31,5 +31,11 @@ public partial class MainPage : ContentPage
     {
         DumpTestStuff.DumpTest();
     }
+
+    private void OnDumpPage_Clicked(object sender, EventArgs e)
+    {
+        var hwp = new HelloWorldPage();
+        hwp.Dump();
+    }
 }
 

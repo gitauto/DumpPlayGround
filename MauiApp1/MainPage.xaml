@@ -5,6 +5,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Dump Test" Clicked="OnDumpTest_Clicked" />
+        <ToolbarItem Text="DP" Clicked="OnDumpPage_Clicked" />
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="*">
