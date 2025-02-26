@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Web;
 
 namespace DumpLibrary;
 
@@ -226,45 +227,71 @@ public static class DumpExtensions
                 members = GetPublicMembers(type);
                 int length = GetEnumerableLength(enumerable);
 
-                var formattedTypeName = $"{enumerable.GetType().Name.Replace("[]", $"[{length}]")}";
-
-                sb.AppendLine("<thead><tr>");
-                sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
-                sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(formattedTypeName)}</a>");
-                sb.AppendLine($@"</td></tr>");
-
-                sb.AppendLine($@"<tr>");
-                foreach (var member in members)
+                if (members.Count > 0)
                 {
-                    sb.AppendFormat("<th>{0}</th>", WebUtility.HtmlEncode(member.Name));
+                    var formattedTypeName = $"{enumerable.GetType().Name.Replace("[]", $"[{length}]")}";
+
+                    sb.AppendLine("<thead><tr>");
+                    sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
+                    sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
+                    sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(formattedTypeName)}</a>");
+                    sb.AppendLine($@"</td></tr>");
+
+                    sb.AppendLine($@"<tr>");
+                    foreach (var member in members)
+                    {
+                        sb.AppendFormat("<th>{0}</th>", WebUtility.HtmlEncode(member.Name));
+                    }
+                    sb.AppendLine("</tr></thead>");
                 }
-                sb.AppendLine("</tr></thead>");
+                else
+                {
+                    var formattedTypeName = Uri.EscapeDataString($"{enumerable.GetType().Name} ({length} items)");                    
+
+                    sb.AppendLine("<thead><tr>");
+                    sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
+                    sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
+                    sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{formattedTypeName}</a>");
+                    sb.AppendLine($@"</td></tr>");
+
+                    sb.AppendLine($@"<tr>");
+                    sb.AppendFormat("<th>{0}</th>", "Item");
+                    sb.AppendLine("</tr></thead>");
+                }
 
                 headerPrinted = true;
 
                 sb.AppendLine("<tbody>");
             }
 
-            // Genera le righe della tabella
-            sb.AppendLine("<tr>");
-            foreach (var member in members)
-            {
-                Debug.WriteLine($"Tipo: {member.MemberType}, Nome: {member.Name}");
+            if (members.Count > 0)
+            { 
+                // Genera le righe della tabella
+                sb.AppendLine("<tr>");
+                foreach (var member in members)
+                {
+                    Debug.WriteLine($"Tipo: {member.MemberType}, Nome: {member.Name}");
 
-                object? value;
-                try
-                {
-                    value = member is FieldInfo info ? info.GetValue(item) : ((PropertyInfo)member).GetValue(item, null);
+                    object? value;
+                    try
+                    {
+                        value = member is FieldInfo info ? info.GetValue(item) : ((PropertyInfo)member).GetValue(item, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                        continue;
+                    }
+                    sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    continue;
-                }
-                sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
+                sb.AppendLine("</tr>");
             }
-            sb.AppendLine("</tr>");
+            else
+            {
+                sb.AppendLine("<tr>");
+                sb.AppendFormat("<td>{0}</td>", item);
+                sb.AppendLine("</tr>");
+            }
         }
 
         sb.AppendLine("</tbody>");
