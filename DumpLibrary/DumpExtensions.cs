@@ -5,7 +5,6 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Web;
 
 namespace DumpLibrary;
 
@@ -224,8 +223,8 @@ public static class DumpExtensions
             // Per il primo elemento, genera l'header basato sulle proprietà
             if (!headerPrinted)
             {
-                Type type = item.GetType();
-                members = GetPublicMembers(type);
+                Type itemType = item.GetType();
+                members = GetPublicMembers(itemType);
                 int length = GetEnumerableLength(enumerable);
 
                 if (members.Count > 0)
@@ -247,7 +246,26 @@ public static class DumpExtensions
                 }
                 else
                 {
-                    var formattedTypeName = MakeSafeHTMLString($"{enumerable.GetType().Name} ({length} items)");                     
+                    Type enumerableType = enumerable.GetType();
+                    var enumerableTypeToDisplay = enumerableType.Name;
+
+                    if (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof(List<>)) 
+                    { 
+                        enumerableTypeToDisplay = "List"; 
+                    }
+                    else
+                    {
+                        foreach (Type @interface in enumerableType.GetInterfaces())
+                        {
+                            //Debug.WriteLine($" - {@interface.FullName}");
+                            if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                            {
+                                enumerableTypeToDisplay = "IEnumerable";
+                            }
+                        }
+                    }
+
+                    var formattedTypeName = MakeSafeHTMLString($"{enumerableTypeToDisplay}") + WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");                     
 
                     sb.AppendLine("<thead><tr>");
                     sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
