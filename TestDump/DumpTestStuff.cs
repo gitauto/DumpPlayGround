@@ -7,84 +7,84 @@ public class DumpTestStuff
 {
     public static void DumpTest()
     {
-        //string? buffer = null;
-        //buffer.Dump("null string");
+        string? buffer = null;
+        buffer.Dump("null string");
 
-        //new Guid().Dump("Guid");
+        new Guid().Dump("Guid");
 
-        //(-10.76).Dump("Number");
+        (-10.76).Dump("Number");
 
-        //new { Name = "Avatar", Description = "This is a film" }.Dump("Anonymous types");
+        new { Name = "Avatar", Description = "This is a film" }.Dump("Anonymous types");
 
-        //TimeZoneInfo.Local.Dump();
+        TimeZoneInfo.Local.Dump();
 
-        //var persona = new { Nome = "Mario", Età = 30, Amici = new[] { "Luigi", "Peach" } };
-        //persona.Dump("Persona");
+        var persona = new { Nome = "Mario", Età = 30, Amici = new[] { "Luigi", "Peach" } };
+        persona.Dump("Persona");
 
         var numeri = new List<int> { 1, 2, 3, 4, 5 };
-        //numeri.Dump("Numeri");
+        numeri.Dump("Numeri");
 
         var risultato = numeri.Where(n => n > 2).Dump("Filtrati").Sum();
         risultato.Dump("Somma");
 
-        //var alice = new Person2 { Name = "Alice" };
-        //var bob = new Person2 { Name = "Bob" };
-        //alice.Friend = bob;
-        //bob.Friend = alice;
-        //alice.Dump("Circular Reference Example");
+        var alice = new Person2 { Name = "Alice" };
+        var bob = new Person2 { Name = "Bob" };
+        alice.Friend = bob;
+        bob.Friend = alice;
+        alice.Dump("Circular Reference Example");
 
-        //// Riferimento circolare
-        //var moaid1 = new Person
-        //{
-        //    FirstName = "Moaid",
-        //    LastName = "Hathot",
-        //    Profession = Profession.Software,
-        //    _fooField = "Hello"
+        // Riferimento circolare
+        var moaid1 = new Person
+        {
+            FirstName = "Moaid",
+            LastName = "Hathot",
+            Profession = Profession.Software,
+            _fooField = "Hello"
 
-        //};
-        //var haneeni1 = new Person
-        //{
-        //    FirstName = "Haneeni",
-        //    LastName = "Shibli",
-        //    Profession = Profession.Health,
-        //    _fooField = "Bye"
-        //};
-        //moaid1.Spouse = haneeni1;
-        //haneeni1.Spouse = moaid1;
+        };
+        var haneeni1 = new Person
+        {
+            FirstName = "Haneeni",
+            LastName = "Shibli",
+            Profession = Profession.Health,
+            _fooField = "Bye"
+        };
+        moaid1.Spouse = haneeni1;
+        haneeni1.Spouse = moaid1;
 
-        //moaid1.Dump("moaid1");
-        //haneeni1.Dump("haneeni1");
+        moaid1.Dump("moaid1");
+        haneeni1.Dump("haneeni1");
 
-        //new[] { moaid1, haneeni1 }.Dump();
+        new[] { moaid1, haneeni1 }.Dump();
 
-        //var obj = new MyClass();
-        //obj.Dump();
+        var obj = new MyClass();
+        obj.Dump();
 
-        //var table = GetTable();
-        //table.Dump("DataTable");
-        //table.Rows.Dump("DataRowCollection");
+        var table = GetTable();
+        table.Dump("DataTable");
+        table.Rows.Dump("DataRowCollection");
 
-        //// Dataset
-        //// Create 2 DataTable instances.
-        //var table1 = new DataTable("patients");
-        //table1.Columns.Add("name");
-        //table1.Columns.Add("id");
-        //table1.Rows.Add("sam", 1);
-        //table1.Rows.Add("mark", 2);
+        // Dataset
+        // Create 2 DataTable instances.
+        var table1 = new DataTable("patients");
+        table1.Columns.Add("name");
+        table1.Columns.Add("id");
+        table1.Rows.Add("sam", 1);
+        table1.Rows.Add("mark", 2);
 
-        //var table2 = new DataTable("medications");
-        //table2.Columns.Add("id");
-        //table2.Columns.Add("medication");
-        //table2.Rows.Add(1, "atenolol");
-        //table2.Rows.Add(2, "amoxicillin");
+        var table2 = new DataTable("medications");
+        table2.Columns.Add("id");
+        table2.Columns.Add("medication");
+        table2.Rows.Add(1, "atenolol");
+        table2.Rows.Add(2, "amoxicillin");
 
-        //// Create a DataSet and put both tables in it.
-        //var dataSet = new DataSet("office");
-        //dataSet.Tables.Add(table1);
-        //dataSet.Tables.Add(table2);
+        // Create a DataSet and put both tables in it.
+        var dataSet = new DataSet("office");
+        dataSet.Tables.Add(table1);
+        dataSet.Tables.Add(table2);
 
-        //// Visualize DataSet.
-        //dataSet.Dump();
+        // Visualize DataSet.
+        dataSet.Dump();
     }
 
     static DataTable GetTable()

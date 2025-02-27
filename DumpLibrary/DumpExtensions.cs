@@ -492,15 +492,45 @@ public static class DumpExtensions
 
     private static int GetEnumerableLength(IEnumerable enumerable)
     {
-        if (enumerable is Array array) 
-        { 
-            return array.Length; 
+        if (enumerable == null) { return 0; }
+
+        // Gestione degli array
+        if (enumerable is Array array) { return array.Length; }
+
+        // Gestione delle collezioni non generiche
+        if (enumerable is ICollection collection) {  return collection.Count; }
+
+        // Gestione delle collezioni generiche
+        // Usa reflection per verificare se implementa ICollection<T> o IReadOnlyCollection<T>
+        var type = enumerable.GetType();
+        foreach (var interfaceType in type.GetInterfaces())
+        {
+            if (interfaceType.IsGenericType)
+            {
+                var genericTypeDef = interfaceType.GetGenericTypeDefinition();
+
+                if (genericTypeDef == typeof(ICollection<>) ||
+                    genericTypeDef == typeof(IReadOnlyCollection<>))
+                {
+                    // Usa reflection per chiamare la proprietà Count
+                    var countProperty = interfaceType.GetProperty("Count");
+                    if (countProperty != null)
+                    {
+                        return (int?)countProperty.GetValue(enumerable) ?? 0;
+                    }
+                }
+            }
         }
-        else if (enumerable is ICollection collection) 
-        { 
-            return collection.Count; 
-        }
-        return 0;
+
+        // Se tutto il resto fallisce, conta manualmente
+        int count = 0;
+        var enumerator = enumerable.GetEnumerator();
+        while (enumerator.MoveNext()) { count++; }
+
+        // Rilascia le risorse se l'enumeratore implementa IDisposable
+        if (enumerator is IDisposable disposable) {  disposable.Dispose(); }
+
+        return count;
     }
 
     private class ReferenceEqualityComparer : IEqualityComparer<object>
