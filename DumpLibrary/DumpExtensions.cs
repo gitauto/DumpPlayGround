@@ -98,7 +98,7 @@ public static class DumpExtensions
 
         if (IsSimpleType(type)) 
         { 
-            return MakeSafeHTMLString(obj.ToString()) ?? ""; 
+            return MakeSafeHTMLString(obj.ToString() ?? ""); 
         }
         else if (obj is DataTable dataTable)
         {
@@ -401,7 +401,7 @@ public static class DumpExtensions
             var memberType = value?.GetType();
 
             sb.AppendLine("<tr>");
-            sb.AppendLine($@"<th =""member"" title=""{MakeSafeHTMLString(memberType?.FullName)}"">{MakeSafeHTMLString(member.Name)}</th>");
+            sb.AppendLine($@"<th =""member"" title=""{MakeSafeHTMLString(memberType?.FullName ?? "")}"">{MakeSafeHTMLString(member.Name)}</th>");
             sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
             sb.AppendLine("</tr>");
         }
@@ -423,20 +423,20 @@ public static class DumpExtensions
         
         if (IsSimpleType(type))
         {
-            return MakeSafeHTMLString(value.ToString());
+            return MakeSafeHTMLString(value.ToString() ?? "");
         }
         else if (value is IEnumerable enumerable && value is not string)
         {
             if (maxDepth > 0) { return EnumerableToHtmlTable(enumerable, maxDepth, visitedObjects); }
                 
-            return MakeSafeHTMLString(value.ToString());
+            return MakeSafeHTMLString(value.ToString() ?? "");
         }
         else
         {
             // Oggetto complesso: usa la ricorsione se maxDepth non è esaurito
             if (maxDepth > 0) { return ObjectToHtmlTable(value, maxDepth, visitedObjects); }
                 
-            return MakeSafeHTMLString(value.ToString());
+            return MakeSafeHTMLString(value.ToString() ?? "");
         }
     }
 
