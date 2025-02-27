@@ -38,9 +38,9 @@
             clearPageToolStripMenuItem = new ToolStripMenuItem();
             clearPageLightModeToolStripMenuItem = new ToolStripMenuItem();
             saveFileDialog1 = new SaveFileDialog();
-            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -112,22 +112,22 @@
             // 
             // webView21
             // 
-            webView.AllowExternalDrop = true;
-            webView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            webView.CreationProperties = null;
-            webView.DefaultBackgroundColor = Color.White;
-            webView.Location = new Point(0, 27);
-            webView.Name = "webView21";
-            webView.Size = new Size(700, 311);
-            webView.TabIndex = 1;
-            webView.ZoomFactor = 1D;
+            webView21.AllowExternalDrop = true;
+            webView21.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            webView21.CreationProperties = null;
+            webView21.DefaultBackgroundColor = Color.White;
+            webView21.Location = new Point(0, 27);
+            webView21.Name = "webView21";
+            webView21.Size = new Size(700, 311);
+            webView21.TabIndex = 1;
+            webView21.ZoomFactor = 1D;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
-            Controls.Add(webView);
+            Controls.Add(webView21);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 2, 3, 2);
@@ -135,7 +135,7 @@
             Text = "WinForms - Dump Playground";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)webView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -152,6 +152,6 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem clearPageLightModeToolStripMenuItem;
         private ToolStripMenuItem dumpAWindowsFormToolStripMenuItem;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
     }
 }

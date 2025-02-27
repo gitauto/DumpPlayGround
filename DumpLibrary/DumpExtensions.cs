@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Web;
 
 namespace DumpLibrary;
@@ -77,7 +78,7 @@ public static class DumpExtensions
         {
             var sb = new StringBuilder();
             sb.Append(@"<div class=""headingpresenter"">");
-            sb.Append($@"<h1 class=""headingpresenter"">{WebUtility.HtmlEncode(title)}</h1>");
+            sb.Append($@"<h1 class=""headingpresenter"">{MakeSafeHTMLString(title)}</h1>");
             sb.Append(html);
             sb.Append("</div>");
             html = sb.ToString();
@@ -97,7 +98,7 @@ public static class DumpExtensions
 
         if (IsSimpleType(type)) 
         { 
-            return WebUtility.HtmlEncode(obj.ToString()) ?? ""; 
+            return MakeSafeHTMLString(obj.ToString()) ?? ""; 
         }
         else if (obj is DataTable dataTable)
         {
@@ -135,7 +136,7 @@ public static class DumpExtensions
         sb.AppendLine($@"<td class=""typeheader"" colspan=""1"">");
         sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
         sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>");
-        sb.AppendLine($@"{WebUtility.HtmlEncode(headerText)} ({dataSet.Tables.Count} item{pluralSuffix})");
+        sb.AppendLine($@"{MakeSafeHTMLString(headerText)} ({dataSet.Tables.Count} item{pluralSuffix})");
         sb.AppendLine($@"</a></td>");
         sb.AppendLine($@"</tr></thead>");
         sb.AppendLine($@"<tbody><tr><td>");
@@ -174,13 +175,13 @@ public static class DumpExtensions
                 sb.AppendLine($@"<thead><tr>");
                 sb.AppendLine($@"<td class=""typeheader"" colspan=""{dataTable.Columns.Count}"">");
                 sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(headerText)} ({dataTable.Rows.Count} item{pluralSuffix})</a>");
+                sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{MakeSafeHTMLString(headerText)} ({dataTable.Rows.Count} item{pluralSuffix})</a>");
                 sb.AppendLine($@"</td></tr><tr>");
 
                 // Genera le colonne dell'intestazione
                 foreach (DataColumn column in dataTable.Columns)
                 {
-                    sb.AppendFormat("<th>{0}</th>", WebUtility.HtmlEncode(column.ColumnName));
+                    sb.AppendFormat("<th>{0}</th>", MakeSafeHTMLString(column.ColumnName));
                 }
                 sb.AppendLine("</tr></thead>");
                 headerPrinted = true;
@@ -234,19 +235,19 @@ public static class DumpExtensions
                     sb.AppendLine("<thead><tr>");
                     sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
                     sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-                    sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(formattedTypeName)}</a>");
+                    sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{MakeSafeHTMLString(formattedTypeName)}</a>");
                     sb.AppendLine($@"</td></tr>");
 
                     sb.AppendLine($@"<tr>");
                     foreach (var member in members)
                     {
-                        sb.AppendFormat("<th>{0}</th>", WebUtility.HtmlEncode(member.Name));
+                        sb.AppendFormat("<th>{0}</th>", MakeSafeHTMLString(member.Name));
                     }
                     sb.AppendLine("</tr></thead>");
                 }
                 else
                 {
-                    var formattedTypeName = Uri.EscapeDataString($"{enumerable.GetType().Name} ({length} items)");                    
+                    var formattedTypeName = MakeSafeHTMLString($"{enumerable.GetType().Name} ({length} items)");                     
 
                     sb.AppendLine("<thead><tr>");
                     sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
@@ -317,7 +318,7 @@ public static class DumpExtensions
 
             sbc.AppendLine($@"<table id=""{tableId}"" class=""limit"" title=""Cyclic reference"">");
             sbc.AppendLine($@"<thead>");
-            sbc.AppendLine($@"<tr><td class=""typeheader"" colspan=""2""><span class=""cyclic"">∞</span>{WebUtility.HtmlEncode(typeToShowFirstLine)}</td></tr>");
+            sbc.AppendLine($@"<tr><td class=""typeheader"" colspan=""2""><span class=""cyclic"">∞</span>{MakeSafeHTMLString(typeToShowFirstLine)}</td></tr>");
             sbc.AppendLine($@"</thead>");
             sbc.AppendLine($@"<tbody></tbody>");
             sbc.AppendLine($@"</table>");
@@ -342,7 +343,7 @@ public static class DumpExtensions
         sb.AppendLine("<tr>");
         sb.AppendLine($@"<td class=""typeheader"" colspan=""{numColumns}"">");
         sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-        sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(typeToShowFirstLine)}</a>");
+        sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{MakeSafeHTMLString(typeToShowFirstLine)}</a>");
         sb.AppendLine("</td></tr>");
 
         try
@@ -369,7 +370,7 @@ public static class DumpExtensions
             {
                 // Seconda riga della tabella
                 sb.AppendLine($@"<tr id=""sum1"">");
-                sb.AppendLine($@"<td class=""summary"" colspan=""2"">{WebUtility.HtmlEncode(secondLine)}</td>");
+                sb.AppendLine($@"<td class=""summary"" colspan=""2"">{MakeSafeHTMLString(secondLine)}</td>");
                 sb.AppendLine($@"</tr>");
             }
         }
@@ -400,7 +401,7 @@ public static class DumpExtensions
             var memberType = value?.GetType();
 
             sb.AppendLine("<tr>");
-            sb.AppendLine($@"<th =""member"" title=""{WebUtility.HtmlEncode(memberType?.FullName)}"">{WebUtility.HtmlEncode(member.Name)}</th>");
+            sb.AppendLine($@"<th =""member"" title=""{MakeSafeHTMLString(memberType?.FullName)}"">{MakeSafeHTMLString(member.Name)}</th>");
             sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
             sb.AppendLine("</tr>");
         }
@@ -422,20 +423,20 @@ public static class DumpExtensions
         
         if (IsSimpleType(type))
         {
-            return WebUtility.HtmlEncode(value.ToString());
+            return MakeSafeHTMLString(value.ToString());
         }
         else if (value is IEnumerable enumerable && value is not string)
         {
             if (maxDepth > 0) { return EnumerableToHtmlTable(enumerable, maxDepth, visitedObjects); }
                 
-            return WebUtility.HtmlEncode(value.ToString());
+            return MakeSafeHTMLString(value.ToString());
         }
         else
         {
             // Oggetto complesso: usa la ricorsione se maxDepth non è esaurito
             if (maxDepth > 0) { return ObjectToHtmlTable(value, maxDepth, visitedObjects); }
                 
-            return WebUtility.HtmlEncode(value.ToString());
+            return MakeSafeHTMLString(value.ToString());
         }
     }
 
@@ -497,6 +498,8 @@ public static class DumpExtensions
                                .Replace("%title%", !string.IsNullOrEmpty(title) ? "" : $"<title>{title}</title>")
                                .Replace("%css%", darkMode ? CssDarkMode : CssLightMode);
     }
+
+    public static string MakeSafeHTMLString(string data) => JsonSerializer.Serialize(data).Trim('"');
 
     public static bool IsAnonymous(this Type type)
     {

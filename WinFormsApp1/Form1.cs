@@ -24,20 +24,21 @@ public partial class Form1 : Form
 
     private async void InitializeWebView()
     {
-        await webView.EnsureCoreWebView2Async(null);
+        await webView21.EnsureCoreWebView2Async(null);
 
         // Imposta manualmente la posizione e le dimensioni del WebView2
-        webView.Location = new System.Drawing.Point(0, menuStrip1.Height);
-        webView.Size = new System.Drawing.Size(this.ClientSize.Width, this.ClientSize.Height - menuStrip1.Height);
+        webView21.Location = new System.Drawing.Point(0, menuStrip1.Height);
+        webView21.Size = new System.Drawing.Size(this.ClientSize.Width, this.ClientSize.Height - menuStrip1.Height);
 
-        webView.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate());
+        webView21.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate());
     }
 
     public async void AppendRawHTML(string html)
     {
+        // NOTA: L'uso dei backtick (`) in JavaScript permette di includere stringhe multilinea
         var script = $@"appendRawHTML(`{html}`)";
         Debug.WriteLine("\n" + script +"\n");
-        await webView.CoreWebView2.ExecuteScriptAsync(script.Replace("\r\n", ""));
+        await webView21.CoreWebView2.ExecuteScriptAsync(script.Replace("\r\n", ""));
     }
 
     private void TestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -47,7 +48,7 @@ public partial class Form1 : Form
 
     private void ClearPageToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        webView.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate(_HTMLPageTitle, _isoCode, Utils.IsDarkModeActive()));
+        webView21.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate(_HTMLPageTitle, _isoCode, Utils.IsDarkModeActive()));
     }
 
     private async void ExportHTMLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -62,7 +63,7 @@ public partial class Form1 : Form
 
             if (saveFileDialog1.ShowDialog() != DialogResult.OK) { return; }
 
-            await webView.SaveHTMLSourceToFileAsync(saveFileDialog1.FileName);
+            await webView21.SaveHTMLSourceToFileAsync(saveFileDialog1.FileName);
         }
         catch (Exception ex)
         {
@@ -77,7 +78,7 @@ public partial class Form1 : Form
 
     private void ClearPageLightModeToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        webView?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate(_HTMLPageTitle, _isoCode, true));
+        webView21?.CoreWebView2?.NavigateToString(DumpExtensions.GetHtmlPageTemplate(_HTMLPageTitle, _isoCode, true));
     }
 
     private void DumpAWindowsFormToolStripMenuItem_Click(object sender, EventArgs e)
