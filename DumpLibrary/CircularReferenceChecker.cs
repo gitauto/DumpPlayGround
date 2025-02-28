@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace DumpLibrary;
 
-public class CircularReferenceChecker
+internal class CircularReferenceChecker
 {
     private readonly HashSet<object> _visited = [];
     private readonly Stack<object> _currentPath = new();

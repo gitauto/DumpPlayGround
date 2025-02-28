@@ -37,7 +37,7 @@ public partial class Form1 : Form
     {
         // NOTA: L'uso dei backtick (`) in JavaScript permette di includere stringhe multilinea
         var script = $@"appendRawHTML(`{html}`)";
-        Debug.WriteLine("\n" + script +"\n");
+        //Debug.WriteLine("\n" + script +"\n");
         await webView21.CoreWebView2.ExecuteScriptAsync(script.Replace("\r\n", ""));
     }
 
