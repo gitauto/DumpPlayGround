@@ -246,26 +246,9 @@ public static class DumpExtensions
                 }
                 else
                 {
-                    Type enumerableType = enumerable.GetType();
-                    var enumerableTypeToDisplay = enumerableType.Name;
+                    string cleanTypeName = GetCleanTypeName(enumerable);
 
-                    if (enumerableType.IsGenericType && enumerableType.GetGenericTypeDefinition() == typeof(List<>)) 
-                    { 
-                        enumerableTypeToDisplay = "List"; 
-                    }
-                    else
-                    {
-                        foreach (Type @interface in enumerableType.GetInterfaces())
-                        {
-                            //Debug.WriteLine($" - {@interface.FullName}");
-                            if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                            {
-                                enumerableTypeToDisplay = "IEnumerable";
-                            }
-                        }
-                    }
-
-                    var formattedTypeName = MakeSafeHTMLString($"{enumerableTypeToDisplay}") + WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");                     
+                    var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}") + WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");                     
 
                     sb.AppendLine("<thead><tr>");
                     sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
@@ -488,6 +471,39 @@ public static class DumpExtensions
         return [.. type.GetMembers(BindingFlags.Public | BindingFlags.Instance)
                        .Where(member => member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property)
                        .OrderBy(member => member.Name)];
+    }
+
+    public static string GetInterfaceTypeName<T>(T obj)
+    {
+        if (obj is null) { return ""; }
+
+        Type type = obj.GetType();
+
+        // Cerchiamo l'interfaccia IEnumerable<T>
+        Type? ienumerableInterface = type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
+        if (ienumerableInterface != null)
+        {
+            // Otteniamo il tipo generico dell'IEnumerable
+            Type genericArg = ienumerableInterface.GetGenericArguments()[0];
+            return $"IEnumerable<{genericArg.Name}>";
+        }
+
+        // Altrimenti, usiamo il metodo originale
+        return GetCleanTypeName(obj);
+    }
+
+    public static string GetCleanTypeName<T>(T obj)
+    {
+        if (obj is null) { return ""; }
+
+        Type type = obj.GetType();
+        if (!type.IsGenericType) { return type.Name; }
+
+        string baseName = type.Name[..type.Name.IndexOf('`')];
+        string[] genericArgs = [.. type.GetGenericArguments().Select(t => t.Name)];
+
+        return $"{baseName}<{string.Join(", ", genericArgs)}>";
     }
 
     private static int GetEnumerableLength(IEnumerable enumerable)
