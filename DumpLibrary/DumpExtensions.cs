@@ -248,11 +248,11 @@ public static class DumpExtensions
                 }
                 else 
                 {
-                    bool showItemRow = true;
+                    bool showItemRow = TypeHelper.IsNumericType(itemType);
                     string cleanTypeName = TypeHelper.GetCleanTypeName((enumerable));
 
                     var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}");
-                    if (isSilpeType && !cleanTypeName.StartsWith("List<") && !cleanTypeName.StartsWith("IEnumerable<"))
+                    if (isSilpeType && !cleanTypeName.StartsWith("List<") && !cleanTypeName.StartsWith("IEnumerable<") && itemType == typeof(string))
                     {
                         showItemRow = false;
                         formattedTypeName = $"{formattedTypeName[..^1]}{length}]";
