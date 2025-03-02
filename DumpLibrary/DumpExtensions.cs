@@ -322,7 +322,14 @@ public static class DumpExtensions
 
         Type type = obj.GetType();
         string typeToShowFirstLine;
-        if (type.IsAnonymous()) { typeToShowFirstLine = "ø"; } else { typeToShowFirstLine = type.Name; }
+        if (type.IsAnonymous()) 
+        { 
+            typeToShowFirstLine = "ø"; 
+        } 
+        else 
+        { 
+            typeToShowFirstLine = type.Name.Contains('`') ? TypeHelper.GetCleanTypeName2(type) : type.Name;
+        }
 
         // Controlla se l'oggetto è già stato visitato
         if (visitedObjects.Contains(obj))
@@ -365,19 +372,25 @@ public static class DumpExtensions
             string secondLine = "";
             var checker = new CircularReferenceChecker();
 
-            if (type.IsAnonymous())
-            {
-                secondLine = "";
-            }
-            else if (type.IsRecord())
+            if (type.IsAnonymous() || type.IsRecord())
             {
                 secondLine = "";
             }
             else if (type.IsClass)
             {
                 // NOTA: Se l'oggetto ha reference circolari, il metodo .ToString() genera errore, pertanto si evita di chiamarlo
-                if (!checker.HasCircularReference(obj)) { secondLine = obj.ToString() ?? ""; }
-                if (string.IsNullOrEmpty(secondLine))   { secondLine = type.FullName ?? ""; }
+                if (!checker.HasCircularReference(obj)) 
+                { 
+                    secondLine = obj.ToString() ?? ""; 
+                }
+                else 
+                { 
+                    secondLine = type.FullName ?? ""; 
+                }
+            }
+            else
+            {
+                secondLine = obj?.ToString() ?? "";
             }
 
             if (secondLine.Length > 0)

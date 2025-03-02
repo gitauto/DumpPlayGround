@@ -5,6 +5,8 @@ namespace TestDump;
 
 public class DumpTestStuff
 {
+    public delegate void Notification(string message);
+
     public static void DumpTest()
     {
         string? buffer = null;
@@ -186,6 +188,39 @@ public class DumpTestStuff
         var dayOfWeek = DayOfWeek.Monday;
         dayOfWeek.Dump("Enum Example");
 
+        // 12. Struct
+        Point point = new Point { X = 10, Y = 20 };
+        point.Dump("Struct");
+
+        // Interfaccia
+        IShape shape = new Circle(3);
+
+        // Delegato
+        Notification notify = Console.WriteLine;
+
+        // Array
+        int[] numbers = { 1, 2, 3 };
+        numbers.Dump("Array");
+
+        // Oggetto
+        object obj = new object();
+        obj.Dump("object");
+
+        // Dynamic
+        //dynamic dyn = "Dynamic";
+
+        // Tipo nullable
+        int? nullableInt = null;
+        nullableInt.Dump("nullableInt");
+
+        // Span
+        //Span<int> span = stackalloc int[5] { 1, 2, 3, 4, 5 };
+        //span.Dump("Span");
+
+        // Task
+        Task<int> task = Task.FromResult(42);
+        task.Dump();
+
         Console.WriteLine("All tests completed.");
     }
 
@@ -210,4 +245,52 @@ public class DumpTestStuff
         Friday,
         Saturday
     }
+
+    // Definizione dell'interfaccia IShape
+    public interface IShape
+    {
+        // Metodo per disegnare la forma
+        void Draw();
+    }
+
+    // Implementazione della classe Circle
+    public class Circle : IShape
+    {
+        // Proprietà per il raggio del cerchio
+        public double Radius { get; set; }
+
+        // Costruttore per inizializzare il raggio
+        public Circle(double radius)
+        {
+            Radius = radius;
+        }
+
+        // Implementazione del metodo Draw() definito dall'interfaccia IShape
+        public void Draw()
+        {
+            Console.WriteLine($"Drawing a circle with radius {Radius}");
+        }
+    }
+
+    // Definizione della struttura Point
+    public struct Point
+    {
+        // Proprietà pubbliche per le coordinate X e Y
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        // Costruttore per inizializzare le coordinate
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        // Override del metodo ToString() per una rappresentazione testuale
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
+    }
+
 }
