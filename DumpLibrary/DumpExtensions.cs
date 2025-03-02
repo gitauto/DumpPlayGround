@@ -297,14 +297,14 @@ public static class DumpExtensions
                         Debug.WriteLine(ex.Message);
                         continue;
                     }
-                    sb.AppendFormat("<td>{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
+                    sb.AppendFormat($"<td{(TypeHelper.IsNumericType(item.GetType()) ? @" class=""n""" : "")}>" + "{0}</td>", FormatValue(value ?? "", maxDepth - 1, visitedObjects));
                 }
                 sb.AppendLine("</tr>");
             }
             else
-            {
+            {                
                 sb.AppendLine("<tr>");
-                sb.AppendFormat("<td>{0}</td>", item);
+                sb.AppendFormat($"<td{(TypeHelper.IsNumericType(item.GetType()) ? @" class=""n""" : "")}>" + "{0}</td>", item);
                 sb.AppendLine("</tr>");
             }
         }

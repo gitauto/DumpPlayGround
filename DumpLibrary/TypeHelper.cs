@@ -49,4 +49,32 @@ public static class TypeHelper
         }
         return null;
     }
+
+    public static bool IsNumericType(Type type)
+    {
+        if (type == null) return false;
+
+        // Gestione dei tipi nullable
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+        }
+
+        // Controlla se il tipo è uno dei tipi numerici primitivi
+        return Type.GetTypeCode(type) switch
+        {
+            TypeCode.Byte or 
+            TypeCode.SByte or 
+            TypeCode.UInt16 or 
+            TypeCode.UInt32 or 
+            TypeCode.UInt64 or 
+            TypeCode.Int16 or 
+            TypeCode.Int32 or 
+            TypeCode.Int64 or       // <- Include long (int64)
+            TypeCode.Decimal or 
+            TypeCode.Double or 
+            TypeCode.Single => true,
+            _ => false,
+        };
+    }
 }
