@@ -24,6 +24,7 @@ public class Person2
 {
     public required string Name { get; set; }
     public Person2? Friend { get; set; }
+    public int Age { get; set; }
 }
 
 public class MyClass

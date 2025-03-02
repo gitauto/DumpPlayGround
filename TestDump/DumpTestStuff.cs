@@ -99,7 +99,7 @@ public class DumpTestStuff
         dataSet.Dump();
     }
 
-    static DataTable GetTable()
+    private static DataTable GetTable()
     {
         // Here we create a DataTable with four columns.
         var table = new DataTable();
@@ -115,5 +115,99 @@ public class DumpTestStuff
         table.Rows.Add(21, "Combivent", "Janet", DateTime.Now);
         table.Rows.Add(100, "Dilantin", "Melanie", DateTime.Now);
         return table;
+    }
+
+    public static void DumpTestBaseTypes()
+    {
+        // 1. Tipi primitivi
+        int integer = 42;
+        double floatingPoint = 3.14;
+        bool boolean = true;
+        char character = 'A';
+        string text = "Hello, World!";
+        DateTime date = DateTime.Now;
+        decimal number = 123.45m;
+        Guid guid = Guid.NewGuid();
+
+        Console.WriteLine("Dumping primitive types:");
+        integer.Dump("Integer");
+        floatingPoint.Dump("Floating Point");
+        boolean.Dump("Boolean");
+        character.Dump("Character");
+        text.Dump("String");
+        date.Dump("DateTime");
+        number.Dump("Decimal");
+        guid.Dump("GUID");
+
+        // 2. Tipo nullo
+        string? nullString = null;
+        nullString.Dump("Null String");
+
+        // 3. Classi personalizzate
+        var person = new Person2 { Name = "John Doe", Age = 30 };
+        person.Dump("Person Object");
+
+        // 4. Record
+        var recordExample = new RecordExample("Record", 123);
+        recordExample.Dump("Record Example");
+
+        // 5. Tuple
+        var tupleExample = (Name: "Tuple", Value: 456);
+        tupleExample.Dump("Tuple Example");
+
+        // 6. Oggetto anonimo
+        var anonymousObject = new { Key = "Anonymous", Value = 789 };
+        anonymousObject.Dump("Anonymous Object");
+
+        // 7. Liste
+        var listExample = new List<int> { 1, 2, 3, 4, 5 };
+        listExample.Dump("List of Integers");
+
+        // 8. Dizionari
+        var dictionaryExample = new Dictionary<string, string>
+        {
+            { "Key1", "Value1" },
+            { "Key2", "Value2" }
+        };
+        dictionaryExample.Dump("Dictionary Example");
+
+        // 9. Code
+        var queueExample = new Queue<string>();
+        queueExample.Enqueue("First");
+        queueExample.Enqueue("Second");
+        queueExample.Enqueue("Third");
+        queueExample.Dump("Queue Example");
+
+        // 10. Set
+        var setExample = new HashSet<int> { 10, 20, 30, 40 };
+        setExample.Dump("Set Example");
+
+        // 11. Enumerazione
+        var dayOfWeek = DayOfWeek.Monday;
+        dayOfWeek.Dump("Enum Example");
+
+        Console.WriteLine("All tests completed.");
+    }
+
+    // Classe personalizzata
+    //public class Person
+    //{
+    //    public required string Name { get; set; }
+    //    public int Age { get; set; }
+    //}
+
+    // Record
+    public record RecordExample(string Name, int Id);
+
+    // Enumerazione
+    public enum DayOfWeek
+    {
+        Sunday,
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday
     }
 }

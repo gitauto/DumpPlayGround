@@ -1,5 +1,4 @@
 using DumpLibrary;
-using System.Diagnostics;
 using System.Globalization;
 using TestDump;
 using WinFormsApp1.Extensions;
@@ -43,7 +42,8 @@ public partial class Form1 : Form
 
     private void TestToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        DumpTestStuff.DumpTest();
+        //DumpTestStuff.DumpTest();
+        DumpTestStuff.DumpTestBaseTypes();
     }
 
     private void ClearPageToolStripMenuItem_Click(object sender, EventArgs e)
