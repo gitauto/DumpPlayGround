@@ -18,8 +18,14 @@ public class DumpTestStuff
 
         TimeZoneInfo.Local.Dump();
 
+        string[] test = ["Luigi", "Peach"];
+        test.Dump();
+
         var persona = new { Nome = "Mario", Età = 30, Amici = new[] { "Luigi", "Peach" } };
         persona.Dump("Persona");
+
+        var listStrings = new List<string> { "ciao", "come", "stai" };
+        listStrings.Dump();
 
         var numeri = new List<int> { 1, 2, 3, 4, 5 };
         numeri.Dump("Numeri");

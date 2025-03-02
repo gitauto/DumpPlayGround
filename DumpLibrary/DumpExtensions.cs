@@ -112,7 +112,7 @@ public static class DumpExtensions
         {
             return DataSetToHtmlTable(dataSet, maxDepth, visitedObjects);
         }
-        else if (obj is IEnumerable enumerable && obj is not string)
+        else if (obj is IEnumerable enumerable)
         {
             return EnumerableToHtmlTable(enumerable, maxDepth, visitedObjects);
         }
@@ -223,8 +223,10 @@ public static class DumpExtensions
             // Per il primo elemento, genera l'header basato sulle proprietà
             if (!headerPrinted)
             {
+                // Ottieni i membri pubblici solo dal primo elemento
                 Type itemType = item.GetType();
-                members = GetPublicMembers(itemType);
+                bool isSilpeType = IsSimpleType(itemType);
+                if (!isSilpeType) { members = GetPublicMembers(itemType); }
                 int length = GetEnumerableLength(enumerable);
 
                 if (members.Count > 0)
@@ -244,11 +246,21 @@ public static class DumpExtensions
                     }
                     sb.AppendLine("</tr></thead>");
                 }
-                else
+                else 
                 {
+                    bool showItemRow = true;
                     string cleanTypeName = TypeHelper.GetCleanTypeName((enumerable));
 
-                    var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}") + WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");                     
+                    var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}");
+                    if (isSilpeType && !cleanTypeName.StartsWith("List<"))
+                    {
+                        showItemRow = false;
+                        formattedTypeName = $"{formattedTypeName[..^1]}{length}]";
+                    }
+                    else
+                    {
+                        formattedTypeName += WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");
+                    }
 
                     sb.AppendLine("<thead><tr>");
                     sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
@@ -256,9 +268,12 @@ public static class DumpExtensions
                     sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{formattedTypeName}</a>");
                     sb.AppendLine($@"</td></tr>");
 
-                    sb.AppendLine($@"<tr>");
-                    sb.AppendFormat("<th>{0}</th>", "Item");
-                    sb.AppendLine("</tr></thead>");
+                    if (showItemRow)
+                    {
+                        sb.AppendLine($@"<tr>");
+                        sb.AppendFormat("<th>{0}</th>", "Item");
+                        sb.AppendLine("</tr></thead>");
+                    }
                 }
 
                 headerPrinted = true;
