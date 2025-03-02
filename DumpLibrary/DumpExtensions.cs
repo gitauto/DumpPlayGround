@@ -246,7 +246,7 @@ public static class DumpExtensions
                 }
                 else
                 {
-                    string cleanTypeName = GetCleanTypeName(enumerable);
+                    string cleanTypeName = TypeHelper.GetCleanTypeName((enumerable));
 
                     var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}") + WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");                     
 
@@ -272,8 +272,6 @@ public static class DumpExtensions
                 sb.AppendLine("<tr>");
                 foreach (var member in members)
                 {
-                    Debug.WriteLine($"Tipo: {member.MemberType}, Nome: {member.Name}");
-
                     object? value;
                     try
                     {

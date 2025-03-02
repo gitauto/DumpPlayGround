@@ -18,8 +18,8 @@ internal class CircularReferenceChecker
 
     private bool DetectCycle(object obj)
     {
-        // Ignora tipi primitivi o immutabili
-        if (obj == null || obj is ValueType || obj is string) { return false; }
+        // Ignora tipi che non possono contenere riferimenti circolari
+        if (IsNonReferenceType(obj)) { return false; }
 
         // Controlla se l'oggetto è già stato visitato nel percorso corrente
         if (_currentPath.Contains(obj)) { return true; }
@@ -54,4 +54,33 @@ internal class CircularReferenceChecker
 
         return false;
     }
+
+    private bool IsNonReferenceType(object obj)
+    {
+        var type = obj.GetType();
+
+        // Tipi valore (esclusi i nullable)
+        if (type.IsValueType && !IsNullableType(type)) { return true; }
+
+        // Stringhe (immutabili)
+        if (type == typeof(string)) { return true; }
+
+        // Enumerazioni
+        if (type.IsEnum) { return true; }
+
+        // Delegati
+        if (typeof(Delegate).IsAssignableFrom(type)) { return true; }
+
+        // Tipi Nullable<T>
+        if (IsNullableType(type))
+        {
+            // Controlla il tipo sottostante del nullable
+            var underlyingType = Nullable.GetUnderlyingType(type);
+            if (underlyingType != null && underlyingType.IsValueType) { return true; }
+        }
+
+        return false;
+    }
+
+    public static bool IsNullableType(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 }
