@@ -252,7 +252,7 @@ public static class DumpExtensions
                     string cleanTypeName = TypeHelper.GetCleanTypeName((enumerable));
 
                     var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}");
-                    if (isSilpeType && !cleanTypeName.StartsWith("List<"))
+                    if (isSilpeType && !cleanTypeName.StartsWith("List<") && !cleanTypeName.StartsWith("IEnumerable<"))
                     {
                         showItemRow = false;
                         formattedTypeName = $"{formattedTypeName[..^1]}{length}]";
