@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Data;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace DumpLibrary;
 
@@ -102,6 +104,10 @@ public static class DumpExtensions
         { 
             return MakeSafeHTMLString(obj.ToString() ?? ""); 
         }
+        //else if (obj is Delegate del)
+        //{
+        //    return "";
+        //}
         else if (obj is DataTable dataTable)
         {
             return DataTableToHtmlTable(dataTable, maxDepth, visitedObjects);

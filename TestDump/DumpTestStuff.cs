@@ -194,9 +194,14 @@ public class DumpTestStuff
 
         // Interfaccia
         IShape shape = new Circle(3);
+        shape.Dump("IShape");
+
+        ((Circle)shape).Dump("Circle");
 
         // Delegato
         Notification notify = Console.WriteLine;
+        // TODO: Il delegato non termina mai
+        notify.Dump("Notification");
 
         // Array
         int[] numbers = { 1, 2, 3 };
@@ -299,9 +304,13 @@ public class DumpTestStuff
 
         // Interfaccia
         IShape shape = new Circle(3);
+        shape.Dump("IShape");
+
+        ((Circle)shape).Dump("Circle");
 
         // Delegato
         Notification notify = Console.WriteLine;
+        notify.Dump("Notification");
 
         // Array
         int[] numbers = { 1, 2, 3 };
