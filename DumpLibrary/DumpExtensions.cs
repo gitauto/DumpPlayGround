@@ -234,7 +234,7 @@ public static class DumpExtensions
                 {
                     string cleanTypeName = TypeHelper.GetCleanTypeName2(enumerableType);
 
-                    var formattedTypeName = enumerableType.Name.Contains('`') ? $"{WebUtility.HtmlEncode(cleanTypeName)}" : 
+                    var formattedTypeName = enumerableType.Name.Contains('`') ? $"{WebUtility.HtmlEncode(cleanTypeName)} ({length} items)" : 
                                                                                 $"{enumerableType.Name.Replace("[]", $"[{length}]")}";
 
                     sb.AppendLine("<thead><tr>");
@@ -268,11 +268,11 @@ public static class DumpExtensions
                     {
                         if (cleanTypeName.Contains('<'))
                         {
-                            formattedTypeName += WebUtility.HtmlEncode($" ({length}) items)");
+                            formattedTypeName += WebUtility.HtmlEncode($" ({length} items)");
                         }
                         else
                         {
-                            formattedTypeName += WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");
+                            formattedTypeName += WebUtility.HtmlEncode($"<{itemType.Name}> ({length} items)");
                         }                            
                     }
 
