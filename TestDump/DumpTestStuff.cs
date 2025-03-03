@@ -121,49 +121,49 @@ public class DumpTestStuff
 
     public static void DumpTestBaseTypes()
     {
-        // 1. Tipi primitivi
-        int integer = 42;
-        double floatingPoint = 3.14;
-        bool boolean = true;
-        char character = 'A';
-        string text = "Hello, World!";
-        DateTime date = DateTime.Now;
-        decimal number = 123.45m;
-        Guid guid = Guid.NewGuid();
+        //// 1. Tipi primitivi
+        //int integer = 42;
+        //double floatingPoint = 3.14;
+        //bool boolean = true;
+        //char character = 'A';
+        //string text = "Hello, World!";
+        //DateTime date = DateTime.Now;
+        //decimal number = 123.45m;
+        //Guid guid = Guid.NewGuid();
 
-        Console.WriteLine("Dumping primitive types:");
-        integer.Dump("Integer");
-        floatingPoint.Dump("Floating Point");
-        boolean.Dump("Boolean");
-        character.Dump("Character");
-        text.Dump("String");
-        date.Dump("DateTime");
-        number.Dump("Decimal");
-        guid.Dump("GUID");
+        //Console.WriteLine("Dumping primitive types:");
+        //integer.Dump("Integer");
+        //floatingPoint.Dump("Floating Point");
+        //boolean.Dump("Boolean");
+        //character.Dump("Character");
+        //text.Dump("String");
+        //date.Dump("DateTime");
+        //number.Dump("Decimal");
+        //guid.Dump("GUID");
 
-        // 2. Tipo nullo
-        string? nullString = null;
-        nullString.Dump("Null String");
+        //// 2. Tipo nullo
+        //string? nullString = null;
+        //nullString.Dump("Null String");
 
-        // 3. Classi personalizzate
-        var person = new Person2 { Name = "John Doe", Age = 30 };
-        person.Dump("Person Object");
+        //// 3. Classi personalizzate
+        //var person = new Person2 { Name = "John Doe", Age = 30 };
+        //person.Dump("Person Object");
 
-        // 4. Record
-        var recordExample = new RecordExample("Record", 123);
-        recordExample.Dump("Record Example");
+        //// 4. Record
+        //var recordExample = new RecordExample("Record", 123);
+        //recordExample.Dump("Record Example");
 
-        // 5. Tuple
-        var tupleExample = (Name: "Tuple", Value: 456);
-        tupleExample.Dump("Tuple Example");
+        //// 5. Tuple
+        //var tupleExample = (Name: "Tuple", Value: 456);
+        //tupleExample.Dump("Tuple Example");
 
-        // 6. Oggetto anonimo
-        var anonymousObject = new { Key = "Anonymous", Value = 789 };
-        anonymousObject.Dump("Anonymous Object");
+        //// 6. Oggetto anonimo
+        //var anonymousObject = new { Key = "Anonymous", Value = 789 };
+        //anonymousObject.Dump("Anonymous Object");
 
-        // 7. Liste
-        var listExample = new List<int> { 1, 2, 3, 4, 5 };
-        listExample.Dump("List of Integers");
+        //// 7. Liste
+        //var listExample = new List<int> { 1, 2, 3, 4, 5 };
+        //listExample.Dump("List of Integers");
 
         // 8. Dizionari
         var dictionaryExample = new Dictionary<string, string>
@@ -172,6 +172,7 @@ public class DumpTestStuff
             { "Key2", "Value2" }
         };
         dictionaryExample.Dump("Dictionary Example");
+        return;
 
         // 9. Code
         var queueExample = new Queue<string>();
@@ -189,7 +190,7 @@ public class DumpTestStuff
         dayOfWeek.Dump("Enum Example");
 
         // 12. Struct
-        Point point = new Point { X = 10, Y = 20 };
+        Point point = new() { X = 10, Y = 20 };
         point.Dump("Struct");
 
         // Interfaccia

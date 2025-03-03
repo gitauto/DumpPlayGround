@@ -215,6 +215,7 @@ public static class DumpExtensions
 
         bool headerPrinted = false;
         List<MemberInfo> members = [];
+        Type enumerableType = enumerable.GetType();
 
         foreach (var item in enumerable)
         {
@@ -231,7 +232,10 @@ public static class DumpExtensions
 
                 if (members.Count > 0)
                 {
-                    var formattedTypeName = $"{enumerable.GetType().Name.Replace("[]", $"[{length}]")}";
+                    string cleanTypeName = TypeHelper.GetCleanTypeName2(enumerableType);
+
+                    var formattedTypeName = enumerableType.Name.Contains('`') ? $"{WebUtility.HtmlEncode(cleanTypeName)}" : 
+                                                                                $"{enumerableType.Name.Replace("[]", $"[{length}]")}";
 
                     sb.AppendLine("<thead><tr>");
                     sb.AppendLine($@"<td class=""typeheader"" colspan=""{members.Count}"">");
@@ -249,17 +253,27 @@ public static class DumpExtensions
                 else 
                 {
                     bool showItemRow = TypeHelper.IsNumericType(itemType);
-                    string cleanTypeName = TypeHelper.GetCleanTypeName((enumerable));
+                    string cleanTypeName = TypeHelper.GetCleanTypeName(enumerable);
 
-                    var formattedTypeName = MakeSafeHTMLString($"{cleanTypeName}");
-                    if (isSilpeType && !cleanTypeName.StartsWith("List<") && !cleanTypeName.StartsWith("IEnumerable<") && itemType == typeof(string))
+                    var formattedTypeName = WebUtility.HtmlEncode($"{cleanTypeName}");
+                    if (isSilpeType && !cleanTypeName.StartsWith("List<") && 
+                                       !cleanTypeName.StartsWith("IEnumerable<") &&
+                                       !cleanTypeName.StartsWith("Queue<") &&
+                                       itemType == typeof(string))
                     {
                         showItemRow = false;
-                        formattedTypeName = $"{formattedTypeName[..^1]}{length}]";
+                        formattedTypeName = $"{formattedTypeName[..^1]}[{length}]";
                     }
                     else
                     {
-                        formattedTypeName += WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");
+                        if (cleanTypeName.Contains('<'))
+                        {
+                            formattedTypeName += WebUtility.HtmlEncode($" ({length}) items)");
+                        }
+                        else
+                        {
+                            formattedTypeName += WebUtility.HtmlEncode($"<{itemType.Name}> ({length}) items)");
+                        }                            
                     }
 
                     sb.AppendLine("<thead><tr>");
@@ -364,7 +378,7 @@ public static class DumpExtensions
         sb.AppendLine("<tr>");
         sb.AppendLine($@"<td class=""typeheader"" colspan=""{numColumns}"">");
         sb.AppendLine($@"<a class=""typeheader"" onclick=""return toggle('{tableId}');"">");
-        sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{MakeSafeHTMLString(typeToShowFirstLine)}</a>");
+        sb.AppendLine($@"<span class=""arrow-up"" id=""{tableId}ud""></span>{WebUtility.HtmlEncode(typeToShowFirstLine)}</a>");
         sb.AppendLine("</td></tr>");
 
         try
