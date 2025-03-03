@@ -254,15 +254,12 @@ public static class DumpExtensions
                 {
                     bool showItemRow = TypeHelper.IsNumericType(itemType);
                     string cleanTypeName = TypeHelper.GetCleanTypeName(enumerable);
-
                     var formattedTypeName = WebUtility.HtmlEncode($"{cleanTypeName}");
-                    if (isSilpeType && !cleanTypeName.StartsWith("List<") && 
-                                       !cleanTypeName.StartsWith("IEnumerable<") &&
-                                       !cleanTypeName.StartsWith("Queue<") &&
-                                       itemType == typeof(string))
+
+                    if (enumerableType.IsArray)
                     {
-                        showItemRow = false;
-                        formattedTypeName = $"{formattedTypeName[..^1]}[{length}]";
+                        showItemRow = true;
+                        formattedTypeName = $"{formattedTypeName[..^2]}[{length}]";
                     }
                     else
                     {
@@ -543,7 +540,7 @@ public static class DumpExtensions
         string baseName = type.Name[..type.Name.IndexOf('`')];
         string[] genericArgs = [.. type.GetGenericArguments().Select(t => t.Name)];
 
-        return $"{baseName}<{string.Join(", ", genericArgs)}>";
+        return $"{baseName}<{string.Join(",", genericArgs)}>";
     }
 
     private static int GetEnumerableLength(IEnumerable enumerable)
