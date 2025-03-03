@@ -224,6 +224,111 @@ public class DumpTestStuff
         Console.WriteLine("All tests completed.");
     }
 
+    public static void ConsoleDumpTestBaseTypes()
+    {
+        // 1. Tipi primitivi
+        int integer = 42;
+        double floatingPoint = 3.14;
+        bool boolean = true;
+        char character = 'A';
+        string text = "Hello, World!";
+        DateTime date = DateTime.Now;
+        decimal number = 123.45m;
+        Guid guid = Guid.NewGuid();
+
+        Console.WriteLine("Dumping primitive types:");
+        integer.DumpToConsole("Integer");
+        floatingPoint.DumpToConsole("Floating Point");
+        boolean.DumpToConsole("Boolean");
+        character.DumpToConsole("Character");
+        text.DumpToConsole("String");
+        date.DumpToConsole("DateTime");
+        number.DumpToConsole("Decimal");
+        guid.DumpToConsole("GUID");
+
+        // 2. Tipo nullo
+        string? nullString = null;
+        nullString.DumpToConsole("Null String");
+
+        // 3. Classi personalizzate
+        var person = new Person2 { Name = "John Doe", Age = 30 };
+        person.DumpToConsole("Person Object");
+
+        // 4. Record
+        var recordExample = new RecordExample("Record", 123);
+        recordExample.DumpToConsole("Record Example");
+
+        // 5. Tuple
+        var tupleExample = (Name: "Tuple", Value: 456);
+        tupleExample.DumpToConsole("Tuple Example");
+
+        // 6. Oggetto anonimo
+        var anonymousObject = new { Key = "Anonymous", Value = 789 };
+        anonymousObject.DumpToConsole("Anonymous Object");
+
+        // 7. Liste
+        var listExample = new List<int> { 1, 2, 3, 4, 5 };
+        listExample.DumpToConsole("List of Integers");
+
+        // 8. Dizionari
+        var dictionaryExample = new Dictionary<string, string>
+        {
+            { "Key1", "Value1" },
+            { "Key2", "Value2" }
+        };
+        dictionaryExample.DumpToConsole("Dictionary Example");
+
+        // 9. Code
+        var queueExample = new Queue<string>();
+        queueExample.Enqueue("First");
+        queueExample.Enqueue("Second");
+        queueExample.Enqueue("Third");
+        queueExample.DumpToConsole("Queue Example");
+
+        // 10. Set
+        var setExample = new HashSet<int> { 10, 20, 30, 40 };
+        setExample.DumpToConsole("Set Example");
+
+        // 11. Enumerazione
+        var dayOfWeek = DayOfWeek.Monday;
+        dayOfWeek.DumpToConsole("Enum Example");
+
+        // 12. Struct
+        Point point = new() { X = 10, Y = 20 };
+        point.DumpToConsole("Struct");
+
+        // Interfaccia
+        IShape shape = new Circle(3);
+
+        // Delegato
+        Notification notify = Console.WriteLine;
+
+        // Array
+        int[] numbers = { 1, 2, 3 };
+        numbers.DumpToConsole("Array");
+
+        // Oggetto
+        object obj = new();
+        obj.DumpToConsole("object");
+
+        // Dynamic
+        //dynamic dyn = "Dynamic";
+
+        // Tipo nullable
+        int? nullableInt = null;
+        nullableInt.DumpToConsole("nullableInt");
+
+        // Span
+        Span<int> span = stackalloc int[5] { 1, 2, 3, 4, 5 };
+        span.DumpToConsole("Span");
+
+        // Task
+        Task<int> task = Task.FromResult(42);
+        task.DumpToConsole();
+
+        Console.WriteLine("All tests completed.");
+    }
+
     // Record
     public record RecordExample(string Name, int Id);
 

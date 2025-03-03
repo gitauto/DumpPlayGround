@@ -78,6 +78,31 @@ public static class TypeHelper
         };
     }
 
+    public static bool IsSimpleType(Type type)
+    {
+        // Ottieni il tipo sottostante se è un nullable
+        var underlyingType = Nullable.GetUnderlyingType(type);
+
+        // Se è un nullable, controlla il tipo sottostante
+        if (underlyingType != null)
+        {
+            return IsSimpleType(underlyingType);
+        }
+
+        // The primitive types are: Boolean, Byte, SByte, Int16, UInt16, Int32, UInt32, Int64, UInt64, IntPtr, UIntPtr, Char, Double, and Single.
+        // https://learn.microsoft.com/en-us/dotnet/api/system.type.isprimitive?view=net-9.0&devlangs=csharp&f1url=%3FappId%3DDev17IDEF1%26l%3DEN-US%26k%3Dk(System.Type.IsPrimitive)%3Bk(DevLang-csharp)%26rd%3Dtrue
+
+        // Altrimenti controlla il tipo direttamente
+        return type.IsPrimitive ||
+               type.IsEnum ||
+               type == typeof(string) ||
+               type == typeof(decimal) ||
+               type == typeof(DateTime) ||
+               type == typeof(TimeSpan) ||
+               type == typeof(DateTimeOffset) ||
+               type == typeof(Guid);
+    }
+
     public static string GetCleanTypeName2(Type type)
     {
         // Se il tipo implementa IEnumerable<T> e è un iteratore LINQ, trattalo come IEnumerable<T>

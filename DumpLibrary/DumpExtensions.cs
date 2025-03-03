@@ -98,7 +98,7 @@ public static class DumpExtensions
 
         Type type = obj.GetType();
 
-        if (IsSimpleType(type)) 
+        if (TypeHelper.IsSimpleType(type)) 
         { 
             return MakeSafeHTMLString(obj.ToString() ?? ""); 
         }
@@ -229,7 +229,7 @@ public static class DumpExtensions
             {
                 // Ottieni i membri pubblici solo dal primo elemento
                 Type itemType = item.GetType();
-                bool isSilpeType = IsSimpleType(itemType);
+                bool isSilpeType = TypeHelper.IsSimpleType(itemType);
                 if (!isSilpeType) { members = GetPublicMembers(itemType); }
                 int length = GetEnumerableLength(enumerable);
 
@@ -462,7 +462,7 @@ public static class DumpExtensions
 
         Type type = value.GetType();
         
-        if (IsSimpleType(type))
+        if (TypeHelper.IsSimpleType(type))
         {
             return MakeSafeHTMLString(value.ToString() ?? "");
         }
@@ -480,18 +480,6 @@ public static class DumpExtensions
             return MakeSafeHTMLString(value.ToString() ?? "");
         }
     }
-
-    // The primitive types are: Boolean, Byte, SByte, Int16, UInt16, Int32, UInt32, Int64, UInt64, IntPtr, UIntPtr, Char, Double, and Single.
-    // https://learn.microsoft.com/en-us/dotnet/api/system.type.isprimitive?view=net-9.0&devlangs=csharp&f1url=%3FappId%3DDev17IDEF1%26l%3DEN-US%26k%3Dk(System.Type.IsPrimitive)%3Bk(DevLang-csharp)%26rd%3Dtrue
-    private static bool IsSimpleType(Type type) => type.IsPrimitive || 
-                                                   type.IsEnum ||
-                                                   type == typeof(string) ||
-                                                   type == typeof(decimal) ||
-                                                   type == typeof(DateTime) ||
-                                                   type == typeof(TimeSpan) ||
-                                                   type == typeof(DateTimeOffset) ||
-                                                   type == typeof(Guid) ||
-                                                   type == typeof(decimal);
 
     private static bool IsRecord(this Type type)
     {
