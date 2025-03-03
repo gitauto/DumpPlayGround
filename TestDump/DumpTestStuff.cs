@@ -203,7 +203,7 @@ public class DumpTestStuff
         numbers.Dump("Array");
 
         // Oggetto
-        object obj = new object();
+        object obj = new();
         obj.Dump("object");
 
         // Dynamic
@@ -223,13 +223,6 @@ public class DumpTestStuff
 
         Console.WriteLine("All tests completed.");
     }
-
-    // Classe personalizzata
-    //public class Person
-    //{
-    //    public required string Name { get; set; }
-    //    public int Age { get; set; }
-    //}
 
     // Record
     public record RecordExample(string Name, int Id);
@@ -254,43 +247,65 @@ public class DumpTestStuff
     }
 
     // Implementazione della classe Circle
-    public class Circle : IShape
+    public class Circle(double radius) : IShape
     {
         // Proprietà per il raggio del cerchio
-        public double Radius { get; set; }
-
-        // Costruttore per inizializzare il raggio
-        public Circle(double radius)
-        {
-            Radius = radius;
-        }
+        public double Radius { get; set; } = radius;
 
         // Implementazione del metodo Draw() definito dall'interfaccia IShape
-        public void Draw()
-        {
-            Console.WriteLine($"Drawing a circle with radius {Radius}");
-        }
+        public void Draw() => Console.WriteLine($"Drawing a circle with radius {Radius}");
     }
 
     // Definizione della struttura Point
-    public struct Point
+    public struct Point(int x, int y)
     {
         // Proprietà pubbliche per le coordinate X e Y
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        // Costruttore per inizializzare le coordinate
-        public Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
+        public int X { get; set; } = x;
+        public int Y { get; set; } = y;
 
         // Override del metodo ToString() per una rappresentazione testuale
-        public override string ToString()
-        {
-            return $"({X}, {Y})";
-        }
+        public override readonly string ToString() => $"({X}, {Y})";
     }
 
+    public record class Person
+    {
+        public string? _fooField = "hello";
+
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+
+        public Person? Spouse { get; set; }
+
+        public Profession Profession { get; set; }
+
+        public static string? FooMethod(int a) => a == 1 ? "a=1" : "a!=1";
+    }
+
+    public enum Profession
+    {
+        Software,
+        Health
+    };
+
+    public class Person2
+    {
+        public required string Name { get; set; }
+        public Person2? Friend { get; set; }
+        public int Age { get; set; }
+    }
+
+    public class MyClass
+    {
+        public int Field1;
+        public string Field2 = "";
+
+        public int Property1 { get; set; }
+        public string Property2 { get; set; } = "";
+
+        private readonly int PrivateField = 3;
+
+        private string PrivateProperty { get; set; } = "";
+
+        private void UseField() => PrivateField.ToString();
+    }
 }

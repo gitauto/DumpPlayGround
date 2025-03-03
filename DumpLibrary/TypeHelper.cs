@@ -27,7 +27,7 @@ public static class TypeHelper
         {
             string baseName = type.Name[..type.Name.IndexOf('`')];
             string[] genericArgs = [.. type.GetGenericArguments().Select(t => GetCleanTypeName(t))];
-            return $"{baseName}<{string.Join(", ", genericArgs)}>";
+            return $"{baseName}<{string.Join(",", genericArgs)}>";
         }
 
         // Restituisce il nome del tipo per i tipi non generici
