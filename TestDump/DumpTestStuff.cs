@@ -214,8 +214,8 @@ public class DumpTestStuff
         nullableInt.Dump("nullableInt");
 
         // Span
-        //Span<int> span = stackalloc int[5] { 1, 2, 3, 4, 5 };
-        //span.Dump("Span");
+        Span<int> span = stackalloc int[5] { 1, 2, 3, 4, 5 };
+        span.Dump("Span");
 
         // Task
         Task<int> task = Task.FromResult(42);

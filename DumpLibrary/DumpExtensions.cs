@@ -87,6 +87,9 @@ public static class DumpExtensions
         return obj;
     }
 
+    // Implementazione specifica per Span<T>
+    public static void Dump<T>(this Span<T> span, string? title = null, int maxDepth = 5) => span.ToArray().Dump(title, maxDepth);
+
     public static string ToHtmlString(this object? obj, int maxDepth = 5, HashSet<object>? visitedObjects = null)
     {
         if (obj == null) { return NullHtml; }
