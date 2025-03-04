@@ -400,8 +400,9 @@ public static class DumpExtensions
             {
                 // NOTA: Se l'oggetto ha reference circolari, il metodo .ToString() genera errore, pertanto si evita di chiamarlo
                 if (!checker.HasCircularReference(obj)) 
-                { 
-                    secondLine = obj.ToString() ?? ""; 
+                {
+                    // Per i Task non mostra la seconda linea
+                    if (!typeToShowFirstLine.StartsWith("Task<")) { secondLine = obj.ToString() ?? ""; }
                 }
                 else 
                 { 

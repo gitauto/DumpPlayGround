@@ -1,5 +1,6 @@
 ﻿using DumpLibrary;
 using System.Data;
+using System.Diagnostics;
 
 namespace TestDump;
 
@@ -131,7 +132,8 @@ public class DumpTestStuff
         decimal number = 123.45m;
         Guid guid = Guid.NewGuid();
 
-        Console.WriteLine("Dumping primitive types:");
+        Debug.WriteLine("Dumping primitive types:");
+
         integer.Dump("Integer");
         floatingPoint.Dump("Floating Point");
         boolean.Dump("Boolean");
@@ -201,7 +203,7 @@ public class DumpTestStuff
         // Delegato
         Notification notify = Console.WriteLine;
         // TODO: Il delegato non termina mai
-        notify.Dump("Notification");
+        //notify.Dump("Notification");
 
         // Array
         int[] numbers = { 1, 2, 3 };
@@ -226,7 +228,7 @@ public class DumpTestStuff
         Task<int> task = Task.FromResult(42);
         task.Dump();
 
-        Console.WriteLine("All tests completed.");
+        Debug.WriteLine("All tests completed.");
     }
 
     public static void ConsoleDumpTestBaseTypes()
