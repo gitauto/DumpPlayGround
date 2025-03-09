@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Data;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace DumpLibrary;
 
@@ -106,7 +104,7 @@ public static class DumpExtensions
         }
         //else if (obj is Delegate del)
         //{
-        //    return "";
+        //  return "";
         //}
         else if (obj is DataTable dataTable)
         {
@@ -458,7 +456,7 @@ public static class DumpExtensions
         sb.AppendLine("</table>");
         sb.AppendLine("</div>");
 
-        visitedObjects.Remove(obj);
+        if (obj is not null) { visitedObjects.Remove(obj); }
 
         return sb.ToString();
     }
@@ -495,7 +493,7 @@ public static class DumpExtensions
         return printMembersMethod != null;
 
         // Controlla se il tipo ha l'attributo 'IsExternalInit', tipico dei record
-        //return type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.IsExternalInit), false).Any();
+        // return type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.IsExternalInit), false).Any();
     }
 
     private static string GetPluralSuffix(int count) => count > 1 ? "s" : "";
@@ -584,7 +582,7 @@ public static class DumpExtensions
         return count;
     }
 
-    private class ReferenceEqualityComparer : IEqualityComparer<object>
+    private sealed class ReferenceEqualityComparer : IEqualityComparer<object>
     {
         public new bool Equals(object? x, object? y) => ReferenceEquals(x, y);
 

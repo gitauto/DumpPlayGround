@@ -244,6 +244,12 @@ public class DumpTestStuff
         Guid guid = Guid.NewGuid();
 
         Console.WriteLine("Dumping primitive types:");
+
+        string? buffer = null;
+        buffer.DumpToConsole("null string");
+
+        new Guid().DumpToConsole("Guid");
+
         integer.DumpToConsole("Integer");
         floatingPoint.DumpToConsole("Floating Point");
         boolean.DumpToConsole("Boolean");

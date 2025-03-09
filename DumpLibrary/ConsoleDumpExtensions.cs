@@ -7,21 +7,26 @@ public static class ConsoleDumpExtensions
 {
     public static void DumpToConsole<T>(this T obj, string? title = null, int maxDepth = 5)
     {
-        if (obj == null)
-        {
-            Console.WriteLine("Object is null");
-            return;
-        }
-
         if (!string.IsNullOrEmpty(title))
         {
             Console.WriteLine($"\n{title}\n{new string('=', title.Length)}");
         }
 
+        if (obj == null)
+        {
+            Console.WriteLine("null");
+            return;
+        }
+
         Type type = obj.GetType();
 
+        if (TypeHelper.IsSimpleType(type))
+        {
+            Console.WriteLine($"{obj}");
+            return;
+        }
         // Se è una collezione, gestiscila in modo diverso
-        if (obj is IEnumerable and not string)
+        else if (obj is IEnumerable and not string)
         {
             DumpCollection((IEnumerable)obj);
             return;
@@ -86,9 +91,8 @@ public static class ConsoleDumpExtensions
         }
 
         // Determina se tutti gli elementi sono dello stesso tipo e non sono oggetti complessi
-        Type firstType = items[0]?.GetType();
-        bool isSimpleCollection = items.All(i => i == null ||
-                                         (i.GetType() == firstType && TypeHelper.IsSimpleType(firstType)));
+        Type? firstType = items[0]?.GetType();
+        bool isSimpleCollection = items.All(i => i == null || (i.GetType() == firstType && TypeHelper.IsSimpleType(firstType)));
 
         if (isSimpleCollection)
         {
