@@ -55,7 +55,7 @@ internal class CircularReferenceChecker
         return false;
     }
 
-    private bool IsNonReferenceType(object obj)
+    private static bool IsNonReferenceType(object obj)
     {
         var type = obj.GetType();
 

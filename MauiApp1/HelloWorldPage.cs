@@ -24,7 +24,7 @@ public partial class HelloWorldPage : ContentPage
         // Gestione dell'evento Clicked del pulsante
         button.Clicked += async (sender, args) =>
         {
-            await DisplayAlert("Messaggio", "Hello World!", "OK");
+            await DisplayAlertAsync("Messaggio", "Hello World!", "OK");
         };
 
         // Aggiunta del pulsante al layout
